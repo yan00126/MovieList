@@ -1,0 +1,49 @@
+﻿@page "/"
+@* @layout MovieLayout *@
+@rendermode InteractiveServer
+
+
+<PageTitle>Movie List</PageTitle>
+
+
+<h1 class="display-4 text-center">Movie List</h1>
+
+<form>
+    <input type="search" placeholder="Search" 
+    @bind="Search" 
+    @bind:event="oninput"
+    @bind:after="SearchMovies">
+</form>
+
+<p>@Search</p>
+
+<ul class="list-group">
+    @foreach (var movie in movies)
+    {
+        <li class="list-group-item" 
+            @onclick="() => ClickHandler(movie)">
+            @if (movie.Watched)
+            {
+                <span class="me-2">&checkmark;</span>
+            }
+            <a href="/movie/@movie.Id">@movie.Title</a>
+        </li>
+    }
+</ul>
+@code {
+    private List<Movie> movies = Helper.GetMovies();
+
+    private string Search {get; set;} = "";
+
+    private void ClickHandler (Movie movie)
+    {
+        movie.Watched = !movie.Watched;
+    }
+
+    private void SearchMovies ()
+    {
+        movies = Helper.GetMovies();
+
+        movies = movies.FindAll(m => m.Title.Contains(Search));
+    }
+}

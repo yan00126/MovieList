@@ -1,0 +1,28 @@
+﻿@page "/movie/{Id:int}"
+@inject NavigationManager Navigator
+
+<PageTitle>@movie!.Title</PageTitle>
+<h1>@movie!.Title</h1>
+<p>@movie.Director</p>
+<p>@movie.Genre</p>
+
+
+<button class="btn btn-secondary"><a href="/" class="text-light ">Back to Movie List</a></button>
+
+@code {
+    [Parameter]
+    public int Id {get; set;}
+    private List<Movie> movies = Helper.GetMovies();
+    
+    private Movie? movie;
+    protected override void OnInitialized ()
+    {
+        movie = movies.FirstOrDefault(m => m.Id == Id);
+
+        if (movie == null)
+        {
+            Navigator.NavigateTo("/");
+        }
+
+    }
+}
